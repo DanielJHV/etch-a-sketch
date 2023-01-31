@@ -1,30 +1,68 @@
-let screen = document.querySelector(".screen");
-let input = prompt("Number?");
-let black = document.getElementById("black");
-let random = document.getElementById("random");
+const gridContainer = document.querySelector(".grid-container");
+const blackBtn = document.getElementById("black-btn");
+const randomBtn = document.getElementById("random-btn");
+const resetBtn = document.getElementById("reset-btn");
+const number = document.getElementById("number");
 
-changeGrid();
+changeGrid(16);
 
-function changeGrid() { 
-    for (let i=0; i < input * input; i++){
-    let square = document.createElement("div");
-    square.className = "square"; 
-    screen.appendChild(square);
+function changeGrid(size) {
+    document.querySelectorAll(".grid-item").forEach(item => {
+        item.remove();
+    })
+    for (let i = 0; i < size * size; i++) {
+        let gridItem = document.createElement("div");
+        gridItem.classList.add("grid-item");
+        gridContainer.appendChild(gridItem);
     }
-    screen.style.gridTemplateColumns = `repeat(${input}, 1fr)`
-    screen.style.gridTemplateRows = `repeat(${input}, 1fr)`
+    gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    gridContainer.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+    chooseBlack();
 }
 
-black.addEventListener("click", () => {
-    random.style.backgroundColor = "#fff";
-    random.style.color = "#000";
-    black.style.backgroundColor = "#000";
-    black.style.color = "#fff";
+function chooseBlack() {
+    blackBtn.style.backgroundColor = "#000";
+    blackBtn.style.color = "#fff";
+    document.querySelectorAll(".grid-item").forEach(item => {
+        item.addEventListener("mouseover", () => {
+        item.style.backgroundColor = "#000";
+        });
+    });
+}
+
+function chooseRandom() {
+    document.querySelectorAll(".grid-item").forEach(item => {
+        item.addEventListener("mouseover", () => {
+        let randomColor = Math.floor(Math.random()*16777215).toString(16);
+        item.style.backgroundColor = "#" + randomColor;
+        });
+    });
+}
+
+function resetButtons() {
+    document.querySelectorAll(".button").forEach(button => {
+        button.style.backgroundColor = "#fff";
+        button.style.color = "#000";
+    })
+}
+
+blackBtn.addEventListener("click", () => {
+    resetButtons();
+    blackBtn.style.backgroundColor = "#000";
+    blackBtn.style.color = "#fff";
+    chooseBlack();
 });
 
-random.addEventListener("click", () => {
-    black.style.backgroundColor = "#fff";
-    black.style.color = "#000";
-    random.style.backgroundColor = "#000";
-    random.style.color = "#fff";
+randomBtn.addEventListener("click", () => {
+    resetButtons();
+    randomBtn.style.backgroundColor = "#000";
+    randomBtn.style.color = "#fff";
+    chooseRandom()
 });
+
+resetBtn.addEventListener("click", () => {
+    changeGrid(number.value);
+    resetButtons();
+    chooseBlack();
+})
+
